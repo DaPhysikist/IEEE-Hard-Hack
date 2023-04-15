@@ -1,16 +1,40 @@
-body{
-    font-family: 'PT-Sans', sans-serif;
-}
-
-.filler{
-    height: 15%;
-    width: 100%;
-}
-
-.mainForm{
-    font-family: 'PT-Sans', sans-serif;
-    border-radius: 30px;
-    background-color: white;
-    width: 30%;
-    height: 70%;
-}
+/* Style for the laundry machine images */
+.machine-img {
+    width: 100px;
+    height: 100px;
+    float: left;
+    margin-right: 10px;
+    border-radius: 10px;
+    margin-left: 10px; /* add margin-left to move the images slightly towards the center */
+  }
+  
+  /* Style for the machine status and time */
+  .machine-status {
+    margin-bottom: 10px;
+    clear: both;
+    text-align: center;
+    margin-left: 20%; /* add margin-left to move the text slightly towards the center */
+  }
+  
+  .machine-time {
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 10px;
+    border-radius: 10px;
+    padding: 5px;
+    margin-right: 20%; /* add margin-right to move the time slightly towards the center */
+  }
+  
+  /* Color changes for machine time based on remaining time */
+  .machine-time.red {
+    color: red;
+  }
+  
+  .machine-time.yellow {
+    color: yellow;
+  }
+  
+  .machine-time.green {
+    color: green;
+  }  
