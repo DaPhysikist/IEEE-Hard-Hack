@@ -11,10 +11,8 @@ class Machine_Check(threading.Thread):
         self.dist_to_machine = dist_to_machine
         self.dist_to_obstruction = dist_to_obstruction
 
-        self.run()
-
     def run(self):
         dist1 = self.ultrasonic_1.distance()
         dist2 = self.ultrasonic_2.distance()
         if (dist1 > (self.dist_to_machine - 15) and dist1 < (self.dist_to_machine - self.dist_to_obstruction)) or (dist2 > (self.dist_to_machine - 15) and dist2 < (self.dist_to_machine - self.dist_to_obstruction)):
-            
+            print("Machine Blocked")

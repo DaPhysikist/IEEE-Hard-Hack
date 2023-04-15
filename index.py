@@ -1,7 +1,9 @@
 import cv2
+import sys
 from flask import Flask, render_template, request
+from Sensors import Ultrasonic
+from machine_check import Machine_Check
 
-app = Flask(__name__)
 import cv2
 import pytesseract
 
@@ -47,5 +49,15 @@ def home():
         return render_template('home.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    if sys.argc == 3:
+        dist_to_machine = int(sys.argv[1])
+        dist_to_obstruction = int(sys.argv[2])
 
+        app = Flask(__name__)
+        mc_thread = Machine_Check(dist_to_machine, dist_to_obstruction)
+        app.run(debug=True)
+        mc_thread.start()
+
+
+
+    
