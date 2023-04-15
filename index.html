@@ -18,17 +18,17 @@
 		<div class="machine-status">
 			<img class="machine-img" src="washing-machine.png" alt="Laundry Machine 1">
 				<span>Washer 1</span>
-				<span class="machine-time red">0:45</span>
+				<span class="machine-time red">---</span>
 		</div>
 		<div class="machine-status">
 			<img class="machine-img" src="washing-machine.png" alt="Laundry Machine 2">
 				<span>Washer 2</span>
-				<span class="machine-time orange">0:20</span>
+				<span class="machine-time orange">---</span>
 		</div>
 		<div class="machine-status">
 			<img class="machine-img" src="washing-machine.png" alt="Laundry Machine 3">
 				<span>Dryer 1</span>
-				<span class="machine-time green">0:10</span>
+				<span class="machine-time green">---</span>
 		</div>
 		<div class="machine-status">
 			<img class="machine-img" src="washing-machine.png" alt="Laundry Machine 3">
@@ -38,3 +38,22 @@
 	</main>
 </body>
 </html>
+
+<script>
+var text;
+
+function updateText(text) {
+	document.setInterval(function(){
+	//text = getFromOpenCV();
+	if(text.charAt(1) == ':') {
+		document.getElementById(machine-time).textContent = text;
+	}
+	else if(text.equals('oPEn')) {
+		document.getElementById(machine-time).textContent = 'Available';
+	}
+	else {
+		document.getElementById(machine-time).textContent = '---';
+	}
+	}, 5000);
+}
+</script>
