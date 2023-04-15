@@ -3,32 +3,32 @@
 import RPi.GPIO as GPIO
 import time
 
-TRIG = 12
-ECHO = 16
-
 class Ultrasonic():
-    def __init__(self):
+    def __init__(TRIG, ECHO, self):
+        self.TRIG = TRIG
+        self.ECHO = ECHO
+
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(TRIG, GPIO.OUT)
         GPIO.setup(ECHO, GPIO.IN)
 
-        try:
-            self.loop()
-        except:
-            self.destroy()
+        #try:
+        #    self.loop()
+        #except:
+        #    self.destroy()
 
     def distance(self):
-        GPIO.output(TRIG, 0)
+        GPIO.output(self.TRIG, 0)
         time.sleep(0.000002)
-        GPIO.output(TRIG, 1)
+        GPIO.output(self.TRIG, 1)
         time.sleep(0.00001)
-        GPIO.output(TRIG, 0)
+        GPIO.output(self.TRIG, 0)
 
-        while GPIO.input(ECHO) == 0:
+        while GPIO.input(self.ECHO) == 0:
             a = 0
             time1 = time.time()
 
-        while GPIO.input(ECHO) == 1:
+        while GPIO.input(self.ECHO) == 1:
             a = 1
             time2 = time.time()
 
