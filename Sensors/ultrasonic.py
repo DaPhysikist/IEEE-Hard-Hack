@@ -3,8 +3,8 @@
 import RPi.GPIO as GPIO
 import time
 
-TRIG = 11
-ECHO = 12
+TRIG = 12
+ECHO = 16
 
 def setup():
     GPIO.setmode(GPIO.BOARD)
