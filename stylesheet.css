@@ -1,29 +1,40 @@
 /* Style for the laundry machine images */
 .machine-img {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     float: left;
     margin-right: 10px;
-    border-radius: 10px;
-    margin-left: 10px; /* add margin-left to move the images slightly towards the center */
+    border-radius: 30px;
+    margin-left: 20%; /* add margin-left to move the images slightly towards the center */
+  }
+
+  .title {
+    width: 150px;
+    height: 150px;
+    float: left;
+    margin-right: 10px;
+    border-radius: 30px;
+    text-align: center;
   }
   
   /* Style for the machine status and time */
   .machine-status {
     margin-bottom: 10px;
+    font-family: 'PT Sans', sans-serif;
+    font-size: 48px;
     clear: both;
-    text-align: center;
-    margin-left: 20%; /* add margin-left to move the text slightly towards the center */
+    text-align: left;
+    margin-right: 20%; /* add margin-left to move the text slightly towards the center */
   }
   
   .machine-time {
     float: right;
-    font-size: 24px;
-    font-weight: bold;
+    font-family: 'PT Sans', sans-serif;
+    font-size: 48px;
     margin-left: 10px;
     border-radius: 10px;
     padding: 5px;
-    margin-right: 20%; /* add margin-right to move the time slightly towards the center */
+    margin-left: 0%; /* add margin-right to move the time slightly towards the center */
   }
   
   /* Color changes for machine time based on remaining time */
@@ -31,10 +42,14 @@
     color: red;
   }
   
-  .machine-time.yellow {
-    color: yellow;
+  .machine-time.orange {
+    color: orange;
   }
   
   .machine-time.green {
     color: green;
+  }  
+
+  .machine-time.black {
+    color: black;
   }  
