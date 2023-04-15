@@ -1,14 +1,15 @@
-from flask import Flask, render_template
-
+from flask import Flask, render_template, request
 app = Flask(__name__)
 
-@app.route('/data')
-def display_data():
-    # Retrieve data from server
-    data = get_data_from_server()
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    if request.method == 'POST':
+        # Handle file upload and extract number from image
+        image = request.files['file']
+        number = read_number_from_image(image)
+        return render_template('result.html', number=number)
+    else:
+        return render_template('data.html')
 
-    # Format data as needed
-    formatted_data = format_data(data)
-
-    # Render template with formatted data
-    return render_template('data.html', data=formatted_data)
+if __name__ == '__main__':
+    app.run(debug=True)
