@@ -1,14 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-  <head>
-    <title>My Data Page</title>
-  </head>
   <body>
-    <h1>My Data</h1>
-    <ul>
-      {% for item in data %}
-        <li>{{ item }}</li>
-      {% endfor %}
-    </ul>
+    <form action="/" method="post" enctype="multipart/form-data">
+      <input type="file" name="file">
+      <input type="submit" value="Upload">
+    </form>
   </body>
 </html>
