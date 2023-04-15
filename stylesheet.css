@@ -1,0 +1,16 @@
+body{
+    font-family: 'PT-Sans', sans-serif;
+}
+
+.filler{
+    height: 15%;
+    width: 100%;
+}
+
+.mainForm{
+    font-family: 'PT-Sans', sans-serif;
+    border-radius: 30px;
+    background-color: white;
+    width: 30%;
+    height: 70%;
+}
