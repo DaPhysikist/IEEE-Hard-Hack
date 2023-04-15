@@ -6,42 +6,40 @@ import time
 TRIG = 12
 ECHO = 16
 
-def setup():
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(TRIG, GPIO.OUT)
-    GPIO.setup(ECHO, GPIO.IN)
+class Ultrasonic():
+    def __init__(self):
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(TRIG, GPIO.OUT)
+        GPIO.setup(ECHO, GPIO.IN)
 
-def distance():
-    GPIO.output(TRIG, 0)
-    time.sleep(0.000002)
-    GPIO.output(TRIG, 1)
-    time.sleep(0.00001)
-    GPIO.output(TRIG, 0)
+        try:
+            self.loop()
+        except:
+            self.destroy()
 
-    while GPIO.input(ECHO) == 0:
-        a = 0
-        time1 = time.time()
+    def distance(self):
+        GPIO.output(TRIG, 0)
+        time.sleep(0.000002)
+        GPIO.output(TRIG, 1)
+        time.sleep(0.00001)
+        GPIO.output(TRIG, 0)
 
-    while GPIO.input(ECHO) == 1:
-        a = 1
-        time2 = time.time()
+        while GPIO.input(ECHO) == 0:
+            a = 0
+            time1 = time.time()
 
-    during = time2 - time1
-    return during * 340 / 2 * 100
+        while GPIO.input(ECHO) == 1:
+            a = 1
+            time2 = time.time()
 
-def loop():
-    while True:
-        dis = distance()
-        print (dis, 'cm')
-        print ('')
-        time.sleep(0.3)
+        during = time2 - time1
+        return during * 340 / 2 * 100
 
-def destroy():
-    GPIO.cleanup()
+    def loop(self):
+        while True:
+            dis = self.distance()
+            print (dis, 'cm')
+            time.sleep(0.3)
 
-if __name__ == "__main__":
-    setup()
-    try:
-        loop()
-    except KeyboardInterrupt:
-        destroy()
+    def destroy(self):
+        GPIO.cleanup()
