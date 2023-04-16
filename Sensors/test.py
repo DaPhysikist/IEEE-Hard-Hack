@@ -1,3 +1,4 @@
+#DOES NOT WORK 4/15 8:24pm
 import cv2
 import pytesseract
 import numpy as np
@@ -5,23 +6,29 @@ pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tessera
 font_scale = 1.5
 font = cv2.FONT_HERSHEY_PLAIN
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 if not cap.isOpened():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
 if not cap.isOpened():
     raise IOError("Cannot open video")
 
 cntr = 0
 while True:
     ret, frame = cap.read()
+    frame = cv2.GaussianBlur(frame,(25,25),0)
+    # Convert the frame to grayscale
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    
+    # Apply a threshold to the grayscale image
+    frame = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     cntr = cntr+1
     if cntr%20==0:
-        imgH, imgW,_ = frame.shape
+        imgH, imgW = frame.shape
         
         x1,y1,w1,h1 = 0,0,imgH,imgW
         
-        imgchar = pytesseract.image_to_string(frame)
+        imgchar = pytesseract.image_to_string(frame, config="-c tessedit_char_whitelist=.0123456789")
         
         imgboxes = pytesseract.image_to_boxes(frame)
         for boxes in imgboxes.splitlines():
@@ -34,7 +41,7 @@ while True:
         font = cv2.FONT_HERSHEY_SIMPLEX
         
         cv2.imshow('Text Detection', frame)
-        print()
+        print(imgchar)
         
         if cv2.waitKey(2) & 0xFF == ord('q'):
             break
