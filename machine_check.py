@@ -19,7 +19,33 @@ class Machine_Check(threading.Thread):
         self.camera.start()
 
     def run(self):
+        flag_1 = False
+        flag_2 = False
+
         while True:
             ultrasonic_status = self.ultrasonic_queue.get()
             lcd_value = self.camera_queue.get()
+
+            if ultrasonic_status is not None:
+                if ultrasonic_status == "unloaded":
+                    flag_1 = True
+            else:
+                if flag_1 == True:
+                    flag_2 = True
+
+            if flag_1 == True and flag_2 == True:
+                if "125" in lcd_value or ("25" in lcd_value and len(lcd_value) > 2):
+                    self.machine_status.put("Available")
+                else:
+                    if int(lcd_value) > 0 or int(lcd_value) <= 53:
+                        self.machine_status.put(lcd_value)
+                    elif int(lcd_value) == 0:
+                        self.machine_status.put("Pending Collection")
+                flag_1 = False
+                flag_2 = False
+            else:
+                if int(lcd_value) > 0 or int(lcd_value) <= 53:
+                    self.machine_status.put(lcd_value)
+                elif int(lcd_value) == 0:
+                    self.machine_status.put("Pending Collection")
 
