@@ -24,10 +24,11 @@ class Camera(threading.Thread):
         while True:
             # Read a frame from the webcam
             frame = self.cap.read()
+            tuple_image = tuple(map(tuple, frame))
 
             # pre-process the image by resizing it, converting it to
             # graycale, blurring it, and computing an edge map
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            gray = cv2.cvtColor(tuple_image, cv2.COLOR_BGR2GRAY)
 
             blurred = cv2.GaussianBlur(gray, (5, 5), 0)
             thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
