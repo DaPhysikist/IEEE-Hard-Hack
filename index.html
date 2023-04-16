@@ -96,7 +96,7 @@ function updateText(text) {
 function updateText() {
     $.ajax({
         method: "GET",
-        url: "/machine_status",
+        url: "/status",
         dataType: "text",
         success: function(result){
             blocked = (result === 'true');

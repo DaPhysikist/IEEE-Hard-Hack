@@ -48,4 +48,5 @@ class Machine_Check(threading.Thread):
                     self.machine_status.put(lcd_value)
                 elif int(lcd_value) == 0:
                     self.machine_status.put("Pending Collection")
+            time.sleep(3)
 
