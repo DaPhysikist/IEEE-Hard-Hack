@@ -93,4 +93,31 @@ function updateText(text) {
 	}
 	}, 1000);
 }
+function updateText() {
+    $.ajax({
+        method: "GET",
+        url: "/machine_status",
+        dataType: "text",
+        success: function(result){
+            blocked = (result === 'true');
+            if(blocked) {
+                count++;
+            }
+            else {
+                count = 0;
+            }
+            if(count > threshold) {
+                setColor('---', 'black');
+            }
+            else if(blocked) {
+                setColor('Blocked', 'red');
+            }
+            else {
+                setColor('Available', 'green');
+            }
+        }
+    });
+}
+
+setInterval(updateText, 3000); // call updateText every 3 seconds
 </script>

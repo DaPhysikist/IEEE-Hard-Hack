@@ -15,6 +15,17 @@ def home():
     else:
         return render_template('index.html')
         
+import time
+
+@app.route('/machine_status', methods=['GET'])
+def machine_status():
+    mc = Machine_Check(dist_to_machine=30, dist_to_obstruction=5, machine_status='')
+    mc.start()
+    time.sleep(3)
+    if mc.out.get()['Blocked']:
+        return 'true'
+    else:
+        return 'false'
 
 if __name__ == '__main__':
     if sys.argc == 2:
