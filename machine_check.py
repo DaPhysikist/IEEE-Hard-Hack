@@ -18,6 +18,9 @@ class Machine_Check(threading.Thread):
 
         self.camera.start()
 
+    def check_status(machine_status):
+        return machine_status.pop()
+
     def run(self):
         flag_1 = False
         flag_2 = False
@@ -48,4 +51,5 @@ class Machine_Check(threading.Thread):
                     self.machine_status.put(lcd_value)
                 elif int(lcd_value) == 0:
                     self.machine_status.put("Pending Collection")
+            time.sleep(3)
 
