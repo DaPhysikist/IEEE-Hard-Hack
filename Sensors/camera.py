@@ -78,4 +78,4 @@ class Camera(threading.Thread):
             #thresh2 = thresh2[y-10:y+h+10, x-10:x+w+10] # Crop the image - note we do this on the original image
 
             imgchar = pytesseract.image_to_string(thresh2, config="--psm 13 -c tessedit_char_whitelist=0123456789.")
-            self.out.put(self.lcd_value)
+            self.out.put(imgchar)
