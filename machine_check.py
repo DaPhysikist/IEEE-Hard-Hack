@@ -3,14 +3,14 @@ import threading
 from Sensors import Ultrasonic
 
 class Machine_Check(threading.Thread):
-    def __init__(self, dist_to_machine, dist_to_obstruction, out):
+    def __init__(self, dist_to_machine, dist_to_obstruction, machine_status):
         threading.Thread.__init__(self)
 
         self.ultrasonic_1 = Ultrasonic(12, 16)
         self.ultrasonic_2 = Ultrasonic(18, 22)
         self.dist_to_machine = dist_to_machine
         self.dist_to_obstruction = dist_to_obstruction
-        self.out = out
+        self.machine_status = machine_status
 
     def run(self):
         dist1 = self.ultrasonic_1.distance()
@@ -19,3 +19,5 @@ class Machine_Check(threading.Thread):
             self.out.put({'Blocked':True})
         else:
             self.out.put({'Blocked':False})
+
+            out['Blocked'] == True:
