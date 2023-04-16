@@ -1,5 +1,6 @@
 from queue import Queue
 import threading
+import time
 
 from Sensors import Ultrasonic
 from Sensors import Camera
@@ -11,7 +12,7 @@ class Machine_Check(threading.Thread):
         self.ultrasonic_queue = Queue()
         self.camera_queue = Queue()
 
-        self.ultrasonic_1 = Ultrasonic(12, 16)
+        self.ultrasonic_1 = Ultrasonic(12, 16, self.ultrasonic_queue)
         self.camera = Camera(self.camera_queue)
         self.dist_to_machine = dist_to_machine
         self.machine_status = machine_status
