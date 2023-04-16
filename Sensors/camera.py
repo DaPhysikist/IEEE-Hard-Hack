@@ -27,8 +27,7 @@ class Camera(threading.Thread):
 
             # pre-process the image by resizing it, converting it to
             # graycale, blurring it, and computing an edge map
-            image = imutils.resize(frame, height=500)
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             blurred = cv2.GaussianBlur(gray, (5, 5), 0)
             thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
