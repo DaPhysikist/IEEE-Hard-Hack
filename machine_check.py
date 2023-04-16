@@ -18,9 +18,8 @@ class Machine_Check(threading.Thread):
 
         self.camera.start()
 
-    def check_status(machine_status) {
+    def check_status(machine_status):
         return machine_status.pop()
-    }
 
     def run(self):
         flag_1 = False
