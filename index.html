@@ -11,6 +11,8 @@
 	}
 </style>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
+<script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
 </head>
 <body>
 	<main>
@@ -35,13 +37,15 @@
 				<span>Dryer 2</span>
 				<span class="machine-time black">---</span>
 		</div>
+		<py-script src="./index.py"></py-script>
+		<py-script src="./machine_check.py"></py-script>
 	</main>
 </body>
 </html>
 
 <script>
 var text;
-var blocked;
+var blocked = '';
 var count;
 var threshold = 100;
 
@@ -60,7 +64,7 @@ function isBlocked() {
 	blocked=JSON.parse(result);
 	}});
 }
-
+/*
 function updateText(text) {
 	document.setInterval(function(){
 	//text = getFromOpenCV();
@@ -92,7 +96,7 @@ function updateText(text) {
 		setColor('---', 'black');
 	}
 	}, 1000);
-}
+}*/
 function updateText() {
     $.ajax({
         method: "GET",
@@ -119,5 +123,5 @@ function updateText() {
     });
 }
 
-setInterval(updateText, 3000); // call updateText every 3 seconds
+setInterval(updateText(), 3000); // call updateText every 3 seconds
 </script>
