@@ -1,3 +1,4 @@
+from queue import Queue
 import threading
 
 from Sensors import Ultrasonic
@@ -7,8 +8,11 @@ class Machine_Check(threading.Thread):
     def __init__(self, dist_to_machine, machine_status):
         threading.Thread.__init__(self)
 
+        self.ultrasonic_queue = Queue()
+        self.camera_queue = Queue()
+
         self.ultrasonic_1 = Ultrasonic(12, 16)
-        self.camera = Camera()
+        self.camera = Camera(self.camera_queue)
         self.dist_to_machine = dist_to_machine
         self.machine_status = machine_status
 
@@ -16,10 +20,6 @@ class Machine_Check(threading.Thread):
 
     def run(self):
         while True:
-            dist1 = self.ultrasonic_1.distance()
-            lcd_value = self.camera.get_lcd_value()
+            ultrasonic_status = self.ultrasonic_queue.get()
+            lcd_value = self.camera_queue.get()
 
-            if (dist1 > (self.dist_to_machine + 5)):
-                self.out.put({'Open':True})
-            else:
-                self.out.put({'Open':False})

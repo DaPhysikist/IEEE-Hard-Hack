@@ -9,18 +9,16 @@ import pytesseract
 import threading
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-STARTING_VALUE = "125"
 
 class Camera(threading.Thread):
-    def __init__(self):
+    def __init__(self, out):
         threading.Thread.__init__(self)
-        self.lcd_value = STARTING_VALUE
 
         # Set up the webcam
         self.cap = cv2.VideoCapture(0)
 
-    def get_lcd_value(self):
-        return self.lcd_value
+        #setup output queue
+        self.out = out
 
     def run(self):
         while True:
@@ -80,4 +78,4 @@ class Camera(threading.Thread):
             #thresh2 = thresh2[y-10:y+h+10, x-10:x+w+10] # Crop the image - note we do this on the original image
 
             imgchar = pytesseract.image_to_string(thresh2, config="--psm 13 -c tessedit_char_whitelist=0123456789.")
-            self.lcd_value = imgchar
+            self.out.put(self.lcd_value)

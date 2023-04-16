@@ -2,11 +2,13 @@
 
 import RPi.GPIO as GPIO
 import time
+import threading
 
-class Ultrasonic():
-    def __init__(TRIG, ECHO, self):
+class Ultrasonic(threading.Thread):
+    def __init__(self, TRIG, ECHO, out):
         self.TRIG = TRIG
         self.ECHO = ECHO
+        self.out = out
 
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(TRIG, GPIO.OUT)
@@ -32,3 +34,15 @@ class Ultrasonic():
 
     def destroy(self):
         GPIO.cleanup()
+
+    def run(self):
+        start_time = time.time()
+        while True:
+            dist = self.distance()
+            if (dist > (self.dist_to_machine + 5)):
+                end_time = time.time()
+                if(end_time - start_time) >= 30:
+                    self.out.put("unloaded")
+            else:
+                start_time = time.time()
+            
