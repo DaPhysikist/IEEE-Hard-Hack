@@ -70,7 +70,7 @@ function updateText(text) {
 	else {
 		count = 0;
 	}
-	if(count > 100)	{
+	if(count > threshold)	{
 		setColor('---', 'black');
 	}
 	else if(text.contains('1.')) {
