@@ -18,9 +18,12 @@ def home():
 
 if __name__ == '__main__':
     if sys.argc == 2:
-        dist_to_machine = int(sys.argv[1])
-        machine_status = 'Available'
-        mc_thread = Machine_Check(dist_to_machine, machine_status)
-        app.run(debug=True)
-        mc_thread.start()
+        try:
+            dist_to_machine = int(sys.argv[1])
+            machine_status = 'Available'
+            mc_thread = Machine_Check(dist_to_machine, machine_status)
+            app.run(debug=True)
+            mc_thread.start()
+        except KeyboardInterrupt:
+            mc_thread.join()
     
