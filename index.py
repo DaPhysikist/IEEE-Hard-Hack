@@ -25,5 +25,6 @@ if __name__ == '__main__':
             app.run(debug=True)
             mc_thread.start()
         except KeyboardInterrupt:
+            mc_thread.ultrasonic_1.destroy()
             mc_thread.join()
     

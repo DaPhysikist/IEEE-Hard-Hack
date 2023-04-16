@@ -12,11 +12,6 @@ class Ultrasonic():
         GPIO.setup(TRIG, GPIO.OUT)
         GPIO.setup(ECHO, GPIO.IN)
 
-        #try:
-        #    self.loop()
-        #except:
-        #    self.destroy()
-
     def distance(self):
         GPIO.output(self.TRIG, 0)
         time.sleep(0.000002)
@@ -34,12 +29,6 @@ class Ultrasonic():
 
         during = time2 - time1
         return during * 340 / 2 * 100
-
-    def loop(self):
-        while True:
-            dis = self.distance()
-            print (dis, 'cm')
-            time.sleep(0.3)
 
     def destroy(self):
         GPIO.cleanup()

@@ -1,86 +1,83 @@
+# import the necessary packages
+import time
+from imutils.perspective import four_point_transform
+from imutils import contours
+import imutils
 import cv2
-import pytesseract
 import numpy as np
+import pytesseract
+import threading
 
-# Set up the webcam
-cap = cv2.VideoCapture(0)
-
-# Set up pytesseract
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+STARTING_VALUE = "125"
 
-# Loop through each frame from the webcam
-i = 1
-lower_green = np.array([0, 25, 25])
-upper_green = np.array([255, 255, 255])
-while True:
-    # Read a frame from the webcam
-    ret, frame = cap.read()
-    
-    # Gaussian blur
-    frame = cv2.GaussianBlur(frame,(5,5),0)
-    
-    # Convert the frame to grayscale
-    #gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    
-    # Apply a threshold to the grayscale image
-    #thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    
-    # Convert the frame to the HSV color space
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    
-    # Mask out any colors that are not in the green color range
-    mask = cv2.inRange(hsv, lower_green, upper_green)
-    
-    # Apply a threshold to the masked image
-    thresh = cv2.threshold(mask, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    
-    
-    # Apply some morphological transformations to the thresholded image
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
-    morph = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
-    
-    if i%10==0:
-        # Use pytesseract to recognize text in the image
-        text = pytesseract.image_to_string(morph, config="--psm 8 -c tessedit_char_whitelist=0123456789abcdefghijklmnopqrstuvwxyz")
-        # config="-c tessedit_char_whitelist=0123456789abcdefghijklmnopqrstuvwxyz"
-    
-        # Print the recognized text to the command line
-        print(text)
-    i = i + 1
-    
-    # Show the original image with text overlay
-    cv2.imshow("Original", frame)
-    cv2.imshow("HSV", hsv)
-    cv2.imshow("Text Detection", morph)
-    
-    # Exit the loop if the 'q' key is pressed
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+class Camera(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.lcd_value = STARTING_VALUE
 
-# Release the webcam and close the window
-cap.release()
-cv2.destroyAllWindows()
+        # Set up the webcam
+        self.cap = cv2.VideoCapture(0)
 
+    def get_lcd_value(self):
+        return self.lcd_value
 
-# import numpy as np
-# import cv2 as cv
-# cap = cv.VideoCapture(1)
-# if not cap.isOpened():
-#     print("Cannot open camera")
-#     exit()
-# while True:
-#     # Capture frame-by-frame
-#     ret, frame = cap.read()
-#     # if frame is read correctly ret is True
-#     if not ret:
-#         print("Can't receive frame (stream end?). Exiting ...")
-#         break
-#     # Our operations on the frame come here
-#     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-#     # Display the resulting frame
-#     cv.imshow('frame', gray)
-#     if cv.waitKey(1) == ord('q'):
-#         break
-# # When everything done, release the capture
-# cap.release()
-# cv.destroyAllWindows()
+    def run(self):
+        while True:
+            # Read a frame from the webcam
+            frame = self.cap.read()
+
+            # pre-process the image by resizing it, converting it to
+            # graycale, blurring it, and computing an edge map
+            image = imutils.resize(frame, height=500)
+            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+            blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+            thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+            edged = cv2.Canny(blurred, 50, 200, 255)
+
+            # find contours in the edge map, then sort them by their
+            # size in descending order
+            cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,
+                cv2.CHAIN_APPROX_SIMPLE)
+            cnts = imutils.grab_contours(cnts)
+            cnts = sorted(cnts, key=cv2.contourArea, reverse=True)
+            displayCnt = None
+            # loop over the contours
+            for c in cnts:
+                # approximate the contour
+                peri = cv2.arcLength(c, True)
+                approx = cv2.approxPolyDP(c, 0.02 * peri, True)
+                # if the contour has four vertices, then we have found
+                # the thermostat display
+                if len(approx) == 4:
+                    displayCnt = approx
+                    break
+                
+            # extract the thermostat display, apply a perspective transform
+            # to it
+            warped = four_point_transform(thresh, displayCnt.reshape(4, 2))
+
+            # threshold the warped image, then apply a series of morphological
+            # operations to cleanup the thresholded image
+            thresh2 = cv2.threshold(warped, 0, 255,
+                cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (1, 5))
+            thresh2 = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
+            height, width = thresh2.shape[:2]
+            start_row = int(height * 0.30)
+            start_col = int(width*0.30)
+            end_row = int(height * 0.70)
+            end_col = int(width * 0.70)
+            kernel = np.ones((5, 5), np.uint8)
+            #thresh2 = cv2.erode(thresh2, kernel, iterations=1)
+            # cv2.dilate(thresh2, kernel, iterations=20)
+            thresh2 = thresh2[start_row:end_row, start_col:end_col]
+
+            gray = 255*(thresh2 < 128).astype(np.uint8) # To invert the text to white
+            coords = cv2.findNonZero(gray) # Find all non-zero points (text)
+            x, y, w, h = cv2.boundingRect(coords) # Find minimum spanning bounding box
+            #thresh2 = thresh2[y-10:y+h+10, x-10:x+w+10] # Crop the image - note we do this on the original image
+
+            imgchar = pytesseract.image_to_string(thresh2, config="--psm 13 -c tessedit_char_whitelist=0123456789.")
+            self.lcd_value = imgchar
