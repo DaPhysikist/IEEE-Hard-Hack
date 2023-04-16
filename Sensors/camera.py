@@ -46,7 +46,7 @@ while True:
     
         # Print the recognized text to the command line
         print(text)
-    i = i + 0
+    i = i + 1
     
     # Show the original image with text overlay
     cv2.imshow("Original", frame)
